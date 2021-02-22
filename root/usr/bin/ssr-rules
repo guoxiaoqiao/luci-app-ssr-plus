@@ -114,7 +114,12 @@ EOF
 	ipset -N fplan hash:net 2>/dev/null
 	for ip in $LAN_FP_IP; do ipset -! add fplan $ip ; done
 	$IPT -I SS_SPEC_WAN_AC -m set --match-set fplan src -j SS_SPEC_WAN_FW
-
+	
+	# 拦截所有请求转发的域名解析到本路由，避免自定义域名服务器导致解析污染
+	$IPT -A PREROUTING -p udp --dport 53 -j SS_SPEC_WAN_AC
+	lan_ip=$(uci get network.lan.ipaddr | sed 's/\/.*//')
+	$IPT -I SS_SPEC_WAN_AC -p udp --dport 53 -j DNAT --to-destination $lan_ip
+	
 	return $?
 }
 
