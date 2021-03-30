@@ -488,7 +488,7 @@ start() {
   mkdir -p /tmp/dnsmasq.d
 	if ! [ "$run_mode" = "oversea" ] ;then
 		cat > /tmp/dnsmasq.d/dnsmasq-ssr.conf <<EOF
-conf-dir=/etc/dnsmasq.ssr
+#conf-dir=/etc/dnsmasq.ssr
 EOF
   else
 		cat > /tmp/dnsmasq.d/dnsmasq-ssr.conf <<EOF
